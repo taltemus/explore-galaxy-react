@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './store';
+import { bankrupt, deposit, withdraw } from './store/bank/slice';
 
 function App() {
+  const { amount } = useSelector((state: RootState) => state.bank);
+  const [value, setValue] = useState(0);
+  const dispatch = useDispatch();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>The bank amount is currently: {amount}</h1>
+      <input
+        type="number"
+        min="0"
+        max="1000000"
+        onChange={(event) => {
+          setValue(parseInt(event?.target?.value ?? 0));
+        }}
+        value={value}
+      />
+      <button onClick={() => dispatch(deposit(value))}>Deposit</button>
+      <button onClick={() => dispatch(withdraw(value))}>Withdraw</button>
+      <button onClick={() => dispatch(bankrupt())}>Bankrupt</button>
     </div>
   );
 }
-
-export default App;
