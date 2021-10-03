@@ -41,21 +41,33 @@ export async function sendUserVerification(user: FirebaseUser) {
 }
 
 export function mapFirebaseAuthError(error: AuthError): ApplicationError {
-  function createApplicationError(code: ErrorCode): ApplicationError {
-    return { code, message: error.message };
+  console.log('error', error.message);
+  function createApplicationError(
+    code: ErrorCode,
+    message: string
+  ): ApplicationError {
+    return { code, message };
   }
 
   switch (error.code) {
     case 'auth/weak-password':
-      return createApplicationError(ErrorCode.INVALID_PASSWORD);
+      return createApplicationError(ErrorCode.INVALID_PASSWORD, error.message);
     case 'auth/invalid-email':
     case 'auth/user-not-found':
     case 'auth/wrong-password':
-      return createApplicationError(ErrorCode.INCORRECT_CREDENTIALS);
+      return createApplicationError(
+        ErrorCode.INCORRECT_CREDENTIALS,
+        error.message
+      );
     case 'auth/email-already-in-use':
-      return createApplicationError(ErrorCode.USER_ALREADY_EXISTS);
+      return createApplicationError(
+        ErrorCode.USER_ALREADY_EXISTS,
+        error.message
+      );
+    case 'auth/too-many-requests':
+      return createApplicationError(ErrorCode.LOCKED, error.message);
     default:
-      return createApplicationError(ErrorCode.UNKNOWN_ERROR);
+      return createApplicationError(ErrorCode.UNKNOWN_ERROR, error.message);
   }
 }
 

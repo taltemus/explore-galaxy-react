@@ -22,7 +22,7 @@ function SignIn({ error, isLoading = false }: SignInProps) {
       return dispatch(
         setValidationError({
           code: ErrorCode.INCORRECT_CREDENTIALS,
-          message: 'Username is required',
+          message: 'Password is required',
         })
       );
     dispatch(signIn({ email: username, password }));

@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { RootState } from '../../store';
 import { signOut } from '../../store/user/slice';
 
@@ -9,7 +10,15 @@ function Navigation() {
     <>
       <div>{currentUser?.email}</div>
       {currentUser?.isVerified && <div>{'Verified User!'}</div>}
-      <button onClick={() => dispatch(signOut())}>Sign Out</button>
+      {!currentUser && (
+        <div>
+          <Link to="/auth/sign-in">Sign In</Link>
+          <Link to="/auth/sign-up">Register</Link>
+        </div>
+      )}
+      {currentUser && (
+        <button onClick={() => dispatch(signOut())}>Sign Out</button>
+      )}
     </>
   );
 }
