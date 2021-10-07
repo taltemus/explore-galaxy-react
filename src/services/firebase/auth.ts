@@ -1,4 +1,3 @@
-import { initializeApp } from '@firebase/app';
 import {
   AuthError,
   createUserWithEmailAndPassword,
@@ -8,40 +7,47 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from '@firebase/auth';
-import { ApplicationError, ErrorCode } from '../models/applicationError';
-import { User } from '../models/User';
+import { ApplicationError, ErrorCode } from '../../models/applicationError';
+import { User } from '../../models/User';
+import { firebase } from './app';
 export { onAuthStateChanged };
 export type { FirebaseUser };
 
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-};
-
-// Initialize Firebase
-const firebase = initializeApp(firebaseConfig);
-
-// Get different firebase services
+/** The auth context for the firebase application */
 export const auth = getAuth(firebase);
 
+/**
+ * Creates a user in the firebase authentication store.
+ * @param email The email to use for the new user.
+ * @param password The password to use for the new user.
+ */
 export async function createUser(email: string, password: string) {
   await createUserWithEmailAndPassword(auth, email, password);
 }
 
+/**
+ * Signs in a user to the firebase application instance.
+ * @param email The email of the user to sign in.
+ * @param password The password of the user to sign in.
+ */
 export async function signInUserByEmail(email: string, password: string) {
   await signInWithEmailAndPassword(auth, email, password);
 }
 
+/**
+ * Sends a verification email to a user.
+ * @param user The user to send a email verification to.
+ */
 export async function sendUserVerification(user: FirebaseUser) {
   await sendEmailVerification(user);
 }
 
+/**
+ * Maps a firebase AuthError to an ApplicationError.
+ * @param error The authentication error from the firebase operation.
+ * @returns The equivalent AppliciationError.
+ */
 export function mapFirebaseAuthError(error: AuthError): ApplicationError {
-  console.log('error', error.message);
   function createApplicationError(
     code: ErrorCode,
     message: string
@@ -71,6 +77,12 @@ export function mapFirebaseAuthError(error: AuthError): ApplicationError {
   }
 }
 
+/**
+ * Maps an object that matches the @firebase/auth User model into the React-Prep.io
+ * application User model.
+ * @param user The @firebase/auth User to map to the React-Prep.io application User.
+ * @returns The mapped React-Prep.io application User.
+ */
 export function MapFirebaseUser(user: FirebaseUser): User {
   return {
     email: user.email!,

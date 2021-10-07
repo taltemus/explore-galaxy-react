@@ -1,6 +1,4 @@
 import { AuthError } from '@firebase/auth';
-// import { store } from '../store';
-// import { setCurrentUser, unSetCurrentUser } from '../store/user/slice';
 import { promiseHelper } from '../utils/promise';
 import {
   auth,
@@ -9,7 +7,7 @@ import {
   MapFirebaseUser,
   sendUserVerification,
   signInUserByEmail,
-} from './firebase';
+} from './firebase/auth';
 
 /**
  * Attempts to sign in a user in firebase
