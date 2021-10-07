@@ -3,7 +3,7 @@ import {
   auth,
   MapFirebaseUser,
   onAuthStateChanged,
-} from '../services/firebase';
+} from '../services/firebase/auth';
 import bankReducer from './bank/slice';
 import userReducer, { setCurrentUser, unSetCurrentUser } from './user/slice';
 
